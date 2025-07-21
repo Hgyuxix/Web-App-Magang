@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Penilaian Magang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex min-h-screen bg-purple-50 font-sans">
+
+    <!-- Sidebar -->
+    <aside class="w-60 bg-purple-800 text-white flex flex-col p-4 space-y-6">
+        <div class="text-center mt-4">
+        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden">
+            <img id="sidebar-foto" src="" alt="Foto Profil" class="w-full h-full object-cover" />
+        </div>
+        <div id="sidebar-nama" class="mt-2 font-semibold">-</div>
+        <div id="sidebar-nim" class="text-sm text-purple-200">-</div>
+        </div>
+
+        <nav class="flex flex-col gap-3">
+        <a href="dashboard.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Dashboard</a>
+        <a href="pendaftaran.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Pendaftaran Magang</a>
+        <a href="logbook.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Log Book</a>
+        <a href="penilaian.html" class="bg-purple-700 rounded-md py-2 px-4">Nilai</a>
+        <a href="bimbingan.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Bimbingan</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 p-10">
+        <h1 class="text-3xl font-bold mb-6">Penilaian Magang</h1>
+
+        <div id="belum-daftar" class="hidden bg-yellow-100 text-yellow-800 p-4 rounded-lg max-w-xl">
+        <p class="mb-2 font-semibold text-lg">Anda belum mendaftar magang.</p>
+        <a href="pendaftaran.html" class="inline-block bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-700">Daftar Sekarang</a>
+        </div>
+
+        <div id="nilai-section" class="hidden bg-white p-6 rounded shadow max-w-xl">
+        <h2 class="text-lg font-semibold mb-4">Nilai Akhir Magang</h2>
+        <ul class="text-gray-800 text-sm space-y-1">
+            <li><strong>Kedisiplinan:</strong> A</li>
+            <li><strong>Tanggung Jawab:</strong> B+</li>
+            <li><strong>Komunikasi:</strong> A-</li>
+            <li><strong>Kinerja Umum:</strong> A</li>
+            <li><strong>Total Nilai:</strong> 90</li>
+        </ul>
+
+        <button onclick="window.location.href='sertifikat.html'" class="mt-4 bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-700">Lihat Sertifikat</button>
+        </div>
+    </main>
+
+    <script>
+        const data = JSON.parse(localStorage.getItem("mahasiswa"));
+        const pendaftaran = JSON.parse(localStorage.getItem("pendaftaranMagang"));
+
+        if (!data) window.location.href = "isi_data.html";
+
+        document.getElementById("sidebar-nama").textContent = data.nama;
+        document.getElementById("sidebar-nim").textContent = data.nim;
+        document.getElementById("sidebar-foto").src = data.foto || "https://via.placeholder.com/100";
+
+        const belumDaftar = document.getElementById("belum-daftar");
+        const nilaiSection = document.getElementById("nilai-section");
+
+        if (!pendaftaran) {
+        belumDaftar.classList.remove("hidden");
+        } else {
+        nilaiSection.classList.remove("hidden");
+        }
+    </script>
+</body>
+</html>

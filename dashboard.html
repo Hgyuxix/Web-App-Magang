@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Dashboard Mahasiswa</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex min-h-screen bg-purple-50 font-sans">
+
+  <!-- Sidebar -->
+  <aside class="w-60 bg-purple-800 text-white flex flex-col p-4 space-y-6">
+    <div class="text-center mt-4">
+      <div class="w-20 h-20 mx-auto rounded-full overflow-hidden">
+        <img id="sidebar-foto" src="" alt="Foto Profil" class="w-full h-full object-cover" />
+      </div>
+
+      <div id="sidebar-nama" class="mt-2 font-semibold">-</div>
+      <div id="sidebar-nim" class="text-sm text-purple-200">-</div>
+    </div>
+
+    <nav class="flex flex-col gap-3">
+      <a href="dashboard.html" class="bg-purple-700 rounded-md py-2 px-4">Dashboard</a>
+      <a href="pendaftaran.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Pendaftaran Magang</a>
+      <a href="logbook.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Log Book</a>
+      <a href="penilaian.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Nilai</a>
+      <a href="bimbingan.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Bimbingan</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1 p-10">
+    <h1 class="text-4xl font-bold mb-6">Dashboard Mahasiswa</h1>
+
+    <!-- Data Diri -->
+    <section class="bg-yellow-100 p-6 rounded-xl border border-black w-full max-w-xl mb-6">
+      <h2 class="text-lg font-semibold mb-4">Data diri</h2>
+      <div class="space-y-2 text-lg">
+        <div><span class="font-bold">Nama :</span> <span id="nama">-</span></div>
+        <div><span class="font-bold">NIM :</span> <span id="nim">-</span></div>
+        <div><span class="font-bold">Kelas :</span> <span id="kelas">-</span></div>
+      </div>
+    </section>
+
+    <!-- Status Magang -->
+<!-- Status Magang -->
+<section class="bg-yellow-100 p-6 rounded-xl border border-black w-full max-w-xl">
+  <h2 class="text-lg font-semibold mb-4">Status Magang</h2>
+  <div id="status-container" class="flex items-center gap-4">
+    <!-- Diisi lewat JS -->
+  </div>
+</section>
+
+
+  <script>
+const data = JSON.parse(localStorage.getItem("mahasiswa"));
+
+if (!data) {
+  // Jika data belum ada, arahkan ke halaman pengisian
+  window.location.href = "isi_data.html";
+} else {
+  document.getElementById("nama").textContent = data.nama;
+  document.getElementById("nim").textContent = data.nim;
+  document.getElementById("kelas").textContent = data.kelas;
+  document.getElementById("sidebar-nama").textContent = data.nama;
+  document.getElementById("sidebar-nim").textContent = data.nim;
+  document.getElementById("sidebar-foto").src = data.foto;
+}
+const pendaftaran = JSON.parse(localStorage.getItem("pendaftaranMagang"));
+const statusContainer = document.getElementById("status-container");
+
+if (pendaftaran) {
+  statusContainer.innerHTML = `
+    <div class="text-4xl text-green-700">✔️</div>
+    <div>
+      <p class="text-xl font-bold text-green-700">Approved!</p>
+      <p class="text-sm text-gray-700">Sedang magang di ${pendaftaran.pt} sejak ${pendaftaran.tgl}</p>
+    </div>
+  `;
+} else {
+  statusContainer.innerHTML = `
+    <div class="text-4xl text-yellow-600">⚠️</div>
+    <div>
+      <p class="text-xl font-bold text-yellow-600">Belum Mendaftar</p>
+      <p class="text-sm text-gray-700">Silakan isi pendaftaran magang terlebih dahulu.</p>
+    </div>
+  `;
+}
+
+  </script>
+
+</body>
+</html>

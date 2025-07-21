@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <title>Chat Bimbingan</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .chat-bubble {
+      max-width: 75%;
+    }
+  </style>
+</head>
+<body class="flex min-h-screen bg-purple-50 font-sans">
+  <!-- Sidebar -->
+  <aside class="w-60 bg-purple-800 text-white flex flex-col p-4 space-y-6">
+    <div class="text-center mt-4">
+      <div class="w-20 h-20 mx-auto rounded-full overflow-hidden">
+        <img id="sidebar-foto" src="" alt="Foto Profil" class="w-full h-full object-cover" />
+      </div>
+      <div id="sidebar-nama" class="mt-2 font-semibold">-</div>
+      <div id="sidebar-nim" class="text-sm text-purple-200">-</div>
+    </div>
+    <nav class="flex flex-col gap-3">
+      <a href="dashboard.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Dashboard</a>
+      <a href="pendaftaran.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Pendaftaran Magang</a>
+      <a href="logbook.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Log Book</a>
+      <a href="penilaian.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Nilai</a>
+      <a href="bimbingan.html" class="bg-purple-700 rounded-md py-2 px-4">Bimbingan</a>
+    </nav>
+  </aside>
+
+  <!-- Content -->
+  <main class="flex-1 p-10 flex flex-col">
+    <h1 class="text-3xl font-bold mb-4">Chat Bimbingan</h1>
+    <div id="chat-box" class="flex-1 bg-white p-4 rounded shadow overflow-y-auto space-y-3">
+      <div class="bg-purple-100 p-3 rounded-lg chat-bubble self-start">Halo, silakan ajukan pertanyaan bimbinganmu.</div>
+    </div>
+    <form id="chat-form" class="mt-4 flex gap-2">
+      <input id="chat-input" type="text" class="flex-1 border rounded p-2" placeholder="Ketik pesan..." required />
+      <button type="submit" class="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-700">Kirim</button>
+    </form>
+    <!-- Form Upload -->
+    <div class="mb-6 max-w-xl">
+    <h2 class="text-lg font-semibold mb-2">Upload Dokumen Bimbingan</h2>
+    <form id="uploadForm" class="flex items-center gap-4">
+        <input type="file" id="uploadInput" class="bg-white p-2 border rounded w-full" />
+        <button type="submit" class="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-700">Upload</button>
+    </form>
+    <p id="uploadStatus" class="mt-2 text-sm text-green-600 hidden">Upload berhasil!</p>
+    </div>
+  </main>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("mahasiswa"));
+    if (!data) window.location.href = "isi_data.html";
+
+    document.getElementById("sidebar-nama").textContent = data.nama;
+    document.getElementById("sidebar-nim").textContent = data.nim;
+    document.getElementById("sidebar-foto").src = data.foto || "https://via.placeholder.com/100";
+
+    const chatBox = document.getElementById("chat-box");
+    const chatForm = document.getElementById("chat-form");
+    const chatInput = document.getElementById("chat-input");
+
+    chatForm.addEventListener("submit", function(e) {
+      e.preventDefault();
+      const msg = chatInput.value.trim();
+      if (!msg) return;
+      appendMessage(msg, "self-end", "purple-200");
+      chatInput.value = "";
+      setTimeout(() => autoReply(msg), 1000);
+    });
+
+    function appendMessage(text, align, color) {
+      const bubble = document.createElement("div");
+      bubble.className = `bg-${color} p-3 rounded-lg chat-bubble ${align}`;
+      bubble.textContent = text;
+      chatBox.appendChild(bubble);
+      chatBox.scrollTop = chatBox.scrollHeight;
+    }
+
+    function autoReply(userMessage) {
+      let reply = "Terima kasih atas pertanyaannya. Akan segera kami tanggapi.";
+      if (userMessage.toLowerCase().includes("judul")) reply = "Silakan kirimkan draft judul magang Anda.";
+      else if (userMessage.toLowerCase().includes("laporan")) reply = "Laporan bisa Anda upload melalui fitur laporan di logbook.";
+      else if (userMessage.toLowerCase().includes("bimbingan")) reply = "Kami siap membimbing Anda selama magang berlangsung.";
+      appendMessage(reply, "self-start", "purple-100");
+    }
+    // Upload file (dummy)
+    document.getElementById("uploadForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    const fileInput = document.getElementById("uploadInput");
+    const status = document.getElementById("uploadStatus");
+
+    if (fileInput.files.length > 0) {
+        // Simulasikan penyimpanan lokal
+        const fileName = fileInput.files[0].name;
+        localStorage.setItem("uploadedFile", fileName);
+        status.textContent = `File "${fileName}" berhasil diunggah.`;
+        status.classList.remove("hidden");
+
+        // Tambahkan pesan otomatis dari sistem
+        addMessage("user", `Saya telah mengunggah file: ${fileName}`);
+        setTimeout(() => {
+        addMessage("dosen", `Terima kasih. Saya akan cek dokumen "${fileName}" secepatnya.`);
+        }, 1000);
+    }
+    });
+    function addMessage(sender, text) {
+    const chatBox = document.getElementById("chat-box");
+    const message = document.createElement("div");
+    message.className = `max-w-[70%] px-4 py-2 rounded-lg mb-2 ${
+        sender === "user" ? "bg-purple-700 text-white self-end ml-auto" : "bg-gray-200 text-gray-800 self-start mr-auto"
+    }`;
+    message.textContent = text;
+    chatBox.appendChild(message);
+    chatBox.scrollTop = chatBox.scrollHeight;
+    }
+  </script>
+</body>
+</html>

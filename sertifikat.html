@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <title>Sertifikat Magang</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    @media print {
+      .no-print { display: none; }
+    }
+    .border-double {
+      border-style: double;
+    }
+  </style>
+</head>
+<body class="bg-white py-10 px-4 font-serif">
+  <div class="max-w-4xl mx-auto border-8 border-purple-800 border-double p-10 rounded-xl shadow-2xl bg-yellow-50">
+    <div class="text-center mb-10">
+      <img src="img/logo-kampus.svg" alt="Kampus Merdeka" class="w-24 h-auto mx-auto" />
+      <h1 class="text-4xl font-extrabold text-purple-900">SERTIFIKAT MAGANG</h1>
+      <p class="text-lg text-gray-700 mt-2">Diberikan kepada:</p>
+    </div>
+
+    <div class="text-lg text-center mb-8">
+      <p class="font-bold text-2xl text-purple-800" id="nama">-</p>
+      <p><span id="nim">-</span> | <span id="kelas">-</span></p>
+    </div>
+
+    <p class="text-justify text-gray-800 mb-6 leading-relaxed">
+      Telah melaksanakan kegiatan magang di <strong id="pt">-</strong> sejak <strong id="tgl">-</strong> dengan menunjukkan sikap kerja yang baik, disiplin, dan bertanggung jawab. Berdasarkan hasil evaluasi, peserta memperoleh nilai akhir sebesar <strong>90</strong>.
+    </p>
+
+    <div class="flex justify-between items-end mt-10">
+      <div class="flex flex-col items-center">
+        <img src="https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=Sertifikat%20Magang" alt="QR Code" class="mb-2" />
+        <span class="text-xs text-gray-500">Scan untuk verifikasi</span>
+      </div>
+      <div class="text-right">
+        <p>Yogyakarta, <span id="tanggal"></span></p>
+        <!-- Bagian kanan bawah sertifikat -->
+        <div class="text-right mt-12 pr-10">
+    <div class="mt-2">
+        <img src="img/ttd_koordinator.png" alt="Tanda Tangan" class="w-32 h-auto" />
+    <p class="mt-1 text-sm">Tanda Tangan</p>
+    </div>
+  <p class="font-bold mt-2">Koordinator Magang</p>
+</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="text-center mt-6 no-print">
+    <button onclick="window.print()" class="bg-purple-800 text-white px-6 py-2 rounded hover:bg-purple-700">Cetak Sertifikat</button>
+  </div>
+
+  <script>
+    const data = JSON.parse(localStorage.getItem("mahasiswa"));
+    const pendaftaran = JSON.parse(localStorage.getItem("pendaftaranMagang"));
+
+    if (!data || !pendaftaran) {
+      document.body.innerHTML = '<div class="text-center text-red-600 text-xl">Data tidak lengkap. Silakan kembali ke halaman utama.</div>';
+    } else {
+      document.getElementById("nama").textContent = data.nama;
+      document.getElementById("nim").textContent = data.nim;
+      document.getElementById("kelas").textContent = data.kelas;
+      document.getElementById("pt").textContent = pendaftaran.pt;
+      document.getElementById("tgl").textContent = pendaftaran.tgl;
+
+      const tgl = new Date();
+      const format = tgl.toLocaleDateString("id-ID", { year: 'numeric', month: 'long', day: 'numeric' });
+      document.getElementById("tanggal").textContent = format;
+    }
+  </script>
+</body>
+</html>

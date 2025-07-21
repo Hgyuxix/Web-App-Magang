@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8" />
+    <title>Pendaftaran Magang</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+</head>
+<body class="flex min-h-screen bg-purple-50 font-sans">
+
+    <!-- Sidebar -->
+    <aside class="w-60 bg-purple-800 text-white flex flex-col p-4 space-y-6">
+        <div class="text-center mt-4">
+        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden">
+            <img id="sidebar-foto" src="" alt="Foto Profil" class="w-full h-full object-cover" />
+        </div>
+        <div id="sidebar-nama" class="mt-2 font-semibold">-</div>
+        <div id="sidebar-nim" class="text-sm text-purple-200">-</div>
+        </div>
+
+        <nav class="flex flex-col gap-3">
+        <a href="dashboard.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Dashboard</a>
+        <a href="pendaftaran.html" class="bg-purple-700 rounded-md py-2 px-4">Pendaftaran Magang</a>
+        <a href="logbook.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Log Book</a>
+        <a href="penilaian.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Nilai</a>
+        <a href="bimbingan.html" class="hover:bg-purple-700 rounded-md py-2 px-4">Bimbingan</a>
+        </nav>
+    </aside>
+
+    <!-- Content -->
+    <main class="flex-1 p-10">
+        <h1 class="text-3xl font-bold mb-6">Pendaftaran Magang</h1>
+
+        <div id="form-section" class="max-w-xl">
+        <form id="formPendaftaran" class="bg-white p-6 rounded-lg shadow">
+            <div class="mb-4">
+            <label for="pt" class="block font-semibold mb-1">Pilih Perusahaan Tujuan</label>
+            <select id="pt" required class="w-full p-2 border rounded">
+                <option value="">-- Pilih --</option>
+                <option value="PT Telkom Indonesia">PT Telkom Indonesia</option>
+                <option value="PT PLN">PT PLN</option>
+                <option value="PT Astra International">PT Astra International</option>
+                <option value="PT Pertamina">PT Pertamina</option>
+            </select>
+            </div>
+
+            <div class="mb-4">
+            <label for="tgl" class="block font-semibold mb-1">Tanggal Mulai Magang</label>
+            <input type="date" id="tgl" required class="w-full p-2 border rounded" />
+            </div>
+
+            <button type="submit" class="bg-purple-800 text-white px-4 py-2 rounded hover:bg-purple-700">Daftar Magang</button>
+        </form>
+        </div>
+
+        <div id="sudah-daftar" class="hidden bg-green-100 text-green-800 p-4 rounded-lg shadow max-w-xl">
+        <p class="font-semibold text-lg">Anda sudah mendaftar magang di <span id="pt-terdaftar"></span> sejak <span id="tgl-terdaftar"></span>.</p>
+        </div>
+    </main>
+
+    <script>
+        const data = JSON.parse(localStorage.getItem("mahasiswa"));
+        if (!data) {
+        window.location.href = "isi_data.html";
+        } else {
+        document.getElementById("sidebar-nama").textContent = data.nama;
+        document.getElementById("sidebar-nim").textContent = data.nim;
+        document.getElementById("sidebar-foto").src = data.foto || "https://via.placeholder.com/100";
+        }
+
+        const form = document.getElementById("formPendaftaran");
+        const formSection = document.getElementById("form-section");
+        const sudahDaftar = document.getElementById("sudah-daftar");
+        const ptText = document.getElementById("pt-terdaftar");
+        const tglText = document.getElementById("tgl-terdaftar");
+
+        const existing = JSON.parse(localStorage.getItem("pendaftaranMagang"));
+
+        if (existing) {
+        formSection.style.display = "none";
+        sudahDaftar.classList.remove("hidden");
+        ptText.textContent = existing.pt;
+        tglText.textContent = existing.tgl;
+        }
+
+        form.addEventListener("submit", function(e) {
+        e.preventDefault();
+        const pt = document.getElementById("pt").value;
+        const tgl = document.getElementById("tgl").value;
+
+        if (pt && tgl) {
+            localStorage.setItem("pendaftaranMagang", JSON.stringify({ pt, tgl }));
+            alert("Pendaftaran berhasil!");
+            location.reload();
+        }
+        });
+    </script>
+
+</body>
+</html>
